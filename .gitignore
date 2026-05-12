@@ -1,0 +1,29 @@
+# ── Frigate 민감 정보 ──────────────────────────
+frigate/config/.jwt_secret
+frigate/config/notifications.pem
+frigate/config/.exports
+
+# ── Frigate DB / 런타임 파일 ───────────────────
+frigate/config/frigate.db
+frigate/config/frigate.db-shm
+frigate/config/frigate.db-wal
+frigate/config/backup.db
+frigate/config/.search_stats.json
+frigate/config/.timeline
+frigate/config/.vacuum
+
+# ── Frigate 대용량 파일 ────────────────────────
+frigate/config/model_cache/
+frigate/storage/
+
+# ── 로그 파일 ──────────────────────────────────
+**/*.log
+
+# ── 가상환경 ───────────────────────────────────
+.venv/
+
+# ── Python 캐시 ────────────────────────────────
+**/__pycache__/
+
+# ── 임시 파일 ──────────────────────────────────
+temp/

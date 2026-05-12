@@ -1,0 +1,32 @@
+services:
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+  
+  frigate:
+    container_name: frigate
+    privileged: true
+    restart: unless-stopped
+    image: ghcr.io/blakeblackshear/frigate:0.17.1
+    shm_size: "256mb" # 로그 권장: 카메라 3대 기준 최소 210MB 필요 (256MB로 증설)
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config:/config
+      - ./storage:/media/frigate
+      - type: tmpfs # 성능 향상을 위한 메모리 가속
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    devices:
+      - /dev/dri/renderD129:/dev/dri/renderD129  # Intel HD 630 iGPU (OpenVINO GPU 가속용)
+    ports:
+      - "5000:5000" # 웹 관리 페이지
+      - "8554:8554" # RTSP 스트리밍
+      - "8555:8555" # WebRTC (빠른 영상 보기)
+    environment:
+      FRIGATE_RTSP_PASSWORD: "skt12345@frigate"

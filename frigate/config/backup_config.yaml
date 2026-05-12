@@ -1,0 +1,58 @@
+mqtt:
+  enabled: False # 입문 단계에서는 생략합니다.
+
+cameras:
+  cctv_1: # TBT-Dome 카메라-765E
+    ffmpeg:
+      inputs:
+        # 아래 주소의 ID, PW, IP를 실제 CCTV 정보로 수정해야 합니다.
+        - path: rtsp://admin:11qqaa..A@192.168.0.6:554/profile1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: True
+      width: 1280
+      height: 720
+      fps: 5
+
+  cctv_2: # Vision-Hightech TBT-Dome 카메라-F977
+    ffmpeg:
+      inputs:
+        # 아래 주소의 ID, PW, IP를 실제 CCTV 정보로 수정해야 합니다.
+        - path: rtsp://admin:11qqaa..@192.168.0.7:554/Ch1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: True
+      width: 1280
+      height: 720
+      fps: 5
+
+  cctv_3: # Vision-Hightech TBT-Dome 카메라 -F99D 
+    ffmpeg:
+      inputs:
+        # 아래 주소의 ID, PW, IP를 실제 CCTV 정보로 수정해야 합니다.
+        - path: rtsp://admin1:11qqaa..@192.168.0.8:554/Ch1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: True
+      width: 1280
+      height: 720
+      fps: 5
+
+
+
+
+
+
+
+
+# CPU를 사용하여 객체(사람, 자동차 등)를 감지하도록 설정
+detectors:
+  ov:
+    type: cpu
+

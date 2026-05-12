@@ -1,0 +1,114 @@
+mqtt:
+  enabled: true
+  host: mqtt # docker-compose.yml에 등록된 서비스 이름
+
+# === 글로벌 알림 설정 ===
+notifications:
+  enabled: true
+  email: brianroh2@nate.com
+
+# === 글로벌 식별 및 저장 옵션 ===
+objects:
+  track:
+    - person # 사람만 이벤트 저장의 트리거 기준으로 설정
+
+snapshots:
+  enabled: true
+  bounding_box: true # 사진에 박스 표시 기능을 활성화
+  retain:
+    default: 7 # 기본 7일 보관
+
+record:
+  enabled: true
+  detections:
+    pre_capture: 3   # 감지 3초 전부터
+    post_capture: 5  # 감지 5초 후까지 (총 8초 클립)
+    retain:
+      days: 7
+      mode: active_objects
+
+cameras:
+  cctv_1: # TBT-Dome 카메라-765E
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:11qqaa..A@192.168.0.6:554/profile1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 640  # CPU 감지 부하 절감을 위해 720p → 640x480 변경
+      height: 480
+      fps: 5
+    zones:
+      zone_for_1:
+        coordinates: 0.038,0.055,0.041,0.928,0.948,0.934,0.967,0.052
+        inertia: 3
+        loitering_time: 0
+        friendly_name: Zone_for_1
+    notifications:
+      enabled: true
+
+  cctv_2: # Vision-Hightech TBT-Dome 카메라-F977
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:11qqaa..@192.168.0.7:554/Ch1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 640  # CPU 감지 부하 절감을 위해 720p → 640x480 변경
+      height: 480
+      fps: 5
+    objects:
+      filters:
+        person:
+          min_score: 0.8    # 과감지 억제: 신뢰도 80% 이상만 감지 (기본 0.5)
+          min_area: 3600    # 과감지 억제: 60x60 픽셀 미만 객체 무시 (그림자 등)
+    zones:
+      zone_for_2:
+        coordinates: 0.047,0.088,0.039,0.953,0.966,0.964,0.962,0.069
+        loitering_time: 0
+        friendly_name: Zone_for_2
+    notifications:
+      enabled: true
+
+  cctv_3: # Vision-Hightech TBT-Dome 카메라 -F99D
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin1:11qqaa..@192.168.0.8:554/Ch1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 640  # CPU 감지 부하 절감을 위해 720p → 640x480 변경
+      height: 480
+      fps: 5
+    zones:
+      zone_for_3:
+        coordinates: 0.025,0.052,0.022,0.967,0.976,0.958,0.983,0.044
+        loitering_time: 0
+        friendly_name: Zone_for_3
+    notifications:
+      enabled: true
+
+# Intel HD 630 iGPU를 사용하여 객체 감지 (OpenVINO GPU 가속)
+# renderD129 = Intel HD 630 / renderD128 = NVIDIA GTX 1070 (제외)
+# OpenVINO의 GPU는 Intel iGPU만 가리킴 (NVIDIA와 무관)
+detectors:
+  ov:
+    type: openvino
+    device: GPU
+
+# OpenVINO 모델 설정 (최상위 레벨 — detectors 아래에 두면 안 됨)
+model:
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+version: 0.17-0
