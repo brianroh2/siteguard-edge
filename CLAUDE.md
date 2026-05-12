@@ -83,6 +83,7 @@ curl -s http://localhost:5000/api/stats | python3 -m json.tool
 다음 상황에서는 **반드시 중단하고 확인 요청:**
 
 - `git push --force` 실행 전
+- INTERFACE.md의 항목(MQTT 토픽·속성명·RPC 명령·카메라 기기명)을 변경하려 할 때 → siteguard-cloud 레포 동시 반영 필요
 - Docker 볼륨 삭제, 녹화 데이터 삭제 등 복구 불가 작업
 - Frigate DB 또는 녹화 스토리지 조작 시
 - 클라우드(Hetzner) 서버 대상 스크립트를 에지에서 직접 실행하려 할 때
@@ -98,3 +99,4 @@ curl -s http://localhost:5000/api/stats | python3 -m json.tool
 | 전체 아키텍처 | siteguard-cloud 레포 `doc/system-architecture-roadmap.md` |
 | LTE 네트워크 구성 | siteguard-cloud 레포 `doc/lte-router-considerations.md` |
 | 클라우드 레이어 작업 | `siteguard-cloud` 레포 |
+| Cloud ↔ Edge 접점 명세 | `INTERFACE.md` (양쪽 레포 동일 파일 유지) |
